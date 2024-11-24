@@ -19,7 +19,7 @@ const Borrow = () => {
     const fetchBorrows = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/v1/borrows"
+          "https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/borrows"
         );
         console.log(response.data);
         setBorrows(response.data);
@@ -56,7 +56,7 @@ const Borrow = () => {
       if (selectedBorrowId) {
         // Güncelleme işlemi
         const response = await axios.put(
-          `http://localhost:8080/api/v1/borrows/${selectedBorrowId}`,
+          `hhttps://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/borrows/${selectedBorrowId}`,
           borrowData
         );
         if (response.status === 200) {
