@@ -72,7 +72,7 @@ const Borrow = () => {
       } else {
         // Yeni kayıt işlemi
         const response = await axios.post(
-          "http://localhost:8080/api/v1/borrows",
+          "https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/borrows",
           borrowData
         );
         if (response.status === 201) {
@@ -110,7 +110,7 @@ const Borrow = () => {
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8080/api/v1/borrows/${id}`
+        `https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/borrows/${id}`
       );
       if (response.status === 200) {
         setBorrows((prev) => prev.filter((borrow) => borrow.id !== id));

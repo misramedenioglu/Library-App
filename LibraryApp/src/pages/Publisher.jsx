@@ -15,7 +15,7 @@ function Publisher() {
   // Yayımcıları çekme
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/v1/publishers")
+      .get("https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/publishers")
       .then((response) => setPublishers(response.data))
       .catch((error) => console.error(error));
 
@@ -41,7 +41,7 @@ function Publisher() {
     }
 
     axios
-      .post("http://localhost:8080/api/v1/publishers", newPublisher)
+      .post("https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/publishers", newPublisher)
       .then((response) => {
         if (response.status === 201) {
           setMessage("Yayımcı başarıyla eklendi!");
@@ -69,7 +69,7 @@ function Publisher() {
 
     axios
       .put(
-        `http://localhost:8080/api/v1/publishers/${editingPublisher.id}`,
+        `https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/publishers/${editingPublisher.id}`,
         editingPublisher
       )
       .then((response) => {
@@ -93,7 +93,7 @@ function Publisher() {
   // Yayımcı silme fonksiyonu
   const deletePublisher = (id) => {
     axios
-      .delete(`http://localhost:8080/api/v1/publishers/${id}`)
+      .delete(`https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/publishers/${id}`)
       .then((response) => {
         if (response.status === 200) {
           setMessage("Yayımcı başarıyla silindi!");

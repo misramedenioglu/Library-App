@@ -22,7 +22,7 @@ function Author() {
   // Yazarları çekme
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/v1/authors")
+      .get("https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/authors")
       .then((response) => setAuthors(response.data))
       .catch((error) => console.error(error));
   }, []);
@@ -36,7 +36,7 @@ function Author() {
     }
 
     axios
-      .post("http://localhost:8080/api/v1/authors", newAuthor)
+      .post("https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/authors", newAuthor)
       .then((response) => {
         if (response.status === 201) {
           setMessage("Yazar başarıyla eklendi!");
@@ -65,7 +65,7 @@ function Author() {
 
     axios
       .put(
-        `http://localhost:8080/api/v1/authors/${editingAuthor.id}`,
+        `https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/authors/${editingAuthor.id}`,
         editingAuthor
       )
       .then((response) => {
@@ -87,7 +87,7 @@ function Author() {
   // Yazar silme fonksiyonu
   const deleteAuthor = (id) => {
     axios
-      .delete(`http://localhost:8080/api/v1/authors/${id}`)
+      .delete(`https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/authors/${id}`)
       .then((response) => {
         if (response.status === 200) {
           setMessage("Yazar başarıyla silindi!");

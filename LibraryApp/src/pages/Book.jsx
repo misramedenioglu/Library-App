@@ -18,7 +18,7 @@ function Book() {
   // Kitapları API'den çek
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/v1/books")
+      .get("https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/books")
       .then((response) => {
         setBooks(response.data);
       })
@@ -46,7 +46,7 @@ function Book() {
     }
 
     axios
-      .post("http://localhost:8080/api/v1/books", newBook)
+      .post("https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/books", newBook)
       .then((response) => {
         if (response.status === 201) {
           setMessage("Kitap başarıyla eklendi!");
@@ -87,7 +87,7 @@ function Book() {
     }
 
     axios
-      .put(`http://localhost:8080/api/v1/books/${editingBook.id}`, editingBook)
+      .put(`https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/books/${editingBook.id}`, editingBook)
       .then((response) => {
         if (response.status === 200) {
           setMessage("Kitap başarıyla güncellendi!");
@@ -110,7 +110,7 @@ function Book() {
   // Kitap silme
   const deleteBook = (id) => {
     axios
-      .delete(`http://localhost:8080/api/v1/books/${id}`)
+      .delete(`https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/books/${id}`)
       .then((response) => {
         if (response.status === 200) {
           setMessage("Kitap başarıyla silindi!");
