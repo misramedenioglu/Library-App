@@ -1,37 +1,26 @@
+# Library App 📚
 
-📚 Library App
-Library App, kullanıcıların kitap ödünç alma, kitap bilgilerini güncelleme, stok yönetimi ve ödünç alınan kitapları listeleme gibi işlemleri gerçekleştirebileceği bir uygulamadır. Kullanıcı dostu arayüzü ile kitap yönetimini kolaylaştırır.
+Bu proje, kitap ödünç alma işlemlerini yönetmek için geliştirilmiş bir web uygulamasıdır. Kullanıcılar, kitap ödünç alabilir, ödünç alınan kitapları listeleyebilir ve mevcut kitap bilgilerini görüntüleyebilir.
 
-🚀 Özellikler
-📖 Kitap Ekleme ve Ödünç Alma: Kullanıcılar yeni kitap bilgileri ekleyebilir ve kitapları ödünç alabilir.
-🔄 Kayıt Güncelleme: Ödünç alınan kitaplar üzerinde bilgileri güncelleyebilir.
-❌ Kayıt Silme: Kitap ödünç alma kayıtlarını silebilir.
-📉 Stok Yönetimi: Ödünç alınan kitapların stoklarını otomatik olarak günceller ve stok tükendiğinde uyarı verir.
-📋 Listeleme: Mevcut tüm ödünç alınan kitapları listeler.
+## Özellikler ✨
 
-🛠️ Kullanılan Teknolojiler
-Frontend:
-React
-CSS (Stil dosyaları)
-Backend:
-RESTful API (Kitap bilgilerini ve ödünç kayıtlarını yönetmek için)
-Paketler:
-Axios (API çağrıları için)
-Node.js & Express (Backend işlemleri için)
+- Kitap ödünç alma ve mevcut stok sayısını otomatik olarak güncelleme.
+- Ödünç alınan kitapların ad, e-posta ve tarih bilgileri ile birlikte listelenmesi.
+- Kullanıcıların ödünç alınan kitapları düzenleyebilmesi veya silebilmesi.
+- Backend ile veri alışverişi (REST API kullanılarak).
 
-🖥️ Kullanım
-Kitap Ödünç Alma:
+## Kullanılan Teknolojiler 🛠️
 
-Kullanıcı bilgilerini (Ad, E-posta, Tarih) ve kitap bilgilerini (ID, Ad, Yayın Yılı, Stok) doldurun.
-Formu göndererek kitabı ödünç alabilirsiniz.
-Güncelleme ve Silme:
+- **Frontend**: React.js
+- **Backend**: Java (Spring Boot) - RESTful API
+- **CSS**: Projenin stillendirilmesi için özel tasarımlar.
+- **Axios**: API istekleri için.
+- **Node.js ve NPM**: Proje bağımlılıklarının yönetimi.
 
-Ödünç alınan kitapların yanında "Güncelle" ve "Sil" butonları bulunur.
-Güncellemek için bilgileri düzenleyin ve formu tekrar gönderin.
-Stok Yönetimi:
 
-Ödünç alınan kitap stokları otomatik olarak güncellenir.
-Stok 0 olduğunda, ödünç alma işlemi yapılamaz ve uyarı gösterilir.
+
+
+
 
 
 
