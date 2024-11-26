@@ -56,7 +56,7 @@ const Borrow = () => {
       if (selectedBorrowId) {
         // Güncelleme işlemi
         const response = await axios.put(
-          `hhttps://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/borrows/${selectedBorrowId}`,
+          `https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/borrows/${selectedBorrowId}`,
           borrowData
         );
         if (response.status === 200) {
@@ -79,7 +79,7 @@ const Borrow = () => {
           setBorrows([...borrows, response.data]);
 
           // Stok azaltma işlemi
-          setBookStock((prevStock) => prevStock - 1);
+          setBookStock((prevStock) => parseInt(prevStock) - 1);
 
           setMessage("Kitap başarıyla ödünç alındı!");
         } else {

@@ -14,10 +14,7 @@ function Publisher() {
 
   // Yayımcıları çekme
   useEffect(() => {
-    axios
-      .get("https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/publishers")
-      .then((response) => setPublishers(response.data))
-      .catch((error) => console.error(error));
+    fetchPublishers();
 
     // Body'ye sınıf ekleme
     document.body.classList.add("publisher-page");
@@ -27,6 +24,13 @@ function Publisher() {
       document.body.classList.remove("publisher-page");
     };
   }, []);
+
+  const fetchPublishers = () => {
+    axios
+      .get("https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/publishers")
+      .then((response) => setPublishers(response.data))
+      .catch((error) => console.error(error));
+  };
 
   // Yayımcı ekleme fonksiyonu
   const addPublisher = (e) => {
@@ -41,11 +45,14 @@ function Publisher() {
     }
 
     axios
-      .post("https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/publishers", newPublisher)
+      .post(
+        "https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/publishers",
+        newPublisher
+      )
       .then((response) => {
         if (response.status === 201) {
           setMessage("Yayımcı başarıyla eklendi!");
-          setPublishers((prev) => [...prev, newPublisher]);
+          fetchPublishers(); // Veriyi yeniden çekiyoruz
           setNewPublisher({ name: "", establishmentYear: "", address: "" });
         } else {
           setMessage("Yayımcı eklenemedi!");
@@ -78,7 +85,7 @@ function Publisher() {
           setPublishers((prev) =>
             prev.map((publisher) =>
               publisher.id === editingPublisher.id
-                ? editingPublisher
+                ? response.data // Backend'den dönen güncellenmiş veriyi ekliyoruz
                 : publisher
             )
           );
@@ -93,11 +100,15 @@ function Publisher() {
   // Yayımcı silme fonksiyonu
   const deletePublisher = (id) => {
     axios
-      .delete(`https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/publishers/${id}`)
+      .delete(
+        `https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/publishers/${id}`
+      )
       .then((response) => {
         if (response.status === 200) {
           setMessage("Yayımcı başarıyla silindi!");
-          setPublishers(publishers.filter((publisher) => publisher.id !== id));
+          setPublishers((prev) =>
+            prev.filter((publisher) => publisher.id !== id)
+          );
         } else {
           setMessage("Yayımcı silinemedi!");
         }
@@ -112,7 +123,14 @@ function Publisher() {
 
       {/* Yeni Yayımcı Ekleme Formu */}
       <form
-        onSubmit={editingPublisher ? updatePublisher : addPublisher}
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (editingPublisher) {
+            updatePublisher(e);
+          } else {
+            addPublisher(e);
+          }
+        }}
         className="publisher-form"
       >
         <input

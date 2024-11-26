@@ -3,20 +3,9 @@ import axios from "axios";
 import "../style/Author.css";
 
 function Author() {
-  // Yazarlar listesi
   const [authors, setAuthors] = useState([]);
-
-  // Yeni yazar verisi
-  const [newAuthor, setNewAuthor] = useState({
-    name: "",
-    country: "",
-    birthDate: "",
-  });
-
-  // Düzenlenmekte olan yazar
+  const [newAuthor, setNewAuthor] = useState({ name: "", country: "", birthDate: "" });
   const [editingAuthor, setEditingAuthor] = useState(null);
-
-  // Kullanıcı mesajı
   const [message, setMessage] = useState("");
 
   // Yazarları çekme
@@ -27,9 +16,8 @@ function Author() {
       .catch((error) => console.error(error));
   }, []);
 
-  // Yazar ekleme fonksiyonu
-  const addAuthor = (e) => {
-    e.preventDefault();
+  // Yazar ekleme
+  const addAuthor = () => {
     if (!newAuthor.name || !newAuthor.country || !newAuthor.birthDate) {
       setMessage("Lütfen tüm alanları doldurun.");
       return;
@@ -40,25 +28,18 @@ function Author() {
       .then((response) => {
         if (response.status === 201) {
           setMessage("Yazar başarıyla eklendi!");
-          setAuthors((prev) => [...prev, newAuthor]);
+          setAuthors((prev) => [...prev, response.data]);
+          setNewAuthor({ name: "", country: "", birthDate: "" });
         } else {
           setMessage("Yazar eklenemedi!");
         }
-        setNewAuthor({ name: "", country: "", birthDate: "" });
       })
       .catch((error) => console.error(error));
   };
 
-  // Yazar güncelleme fonksiyonu
-  const updateAuthor = (e) => {
-    e.preventDefault();
-
-    if (
-      !editingAuthor ||
-      !editingAuthor.name ||
-      !editingAuthor.country ||
-      !editingAuthor.birthDate
-    ) {
+  // Yazar güncelleme
+  const updateAuthor = () => {
+    if (!editingAuthor || !editingAuthor.name || !editingAuthor.country || !editingAuthor.birthDate) {
       setMessage("Lütfen tüm alanları doldurun.");
       return;
     }
@@ -73,7 +54,7 @@ function Author() {
           setMessage("Yazar başarıyla güncellendi!");
           setAuthors((prev) =>
             prev.map((author) =>
-              author.id === editingAuthor.id ? editingAuthor : author
+              author.id === editingAuthor.id ? response.data : author
             )
           );
           setEditingAuthor(null);
@@ -84,7 +65,7 @@ function Author() {
       .catch((error) => console.error(error));
   };
 
-  // Yazar silme fonksiyonu
+  // Yazar silme
   const deleteAuthor = (id) => {
     axios
       .delete(`https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/authors/${id}`)
@@ -104,8 +85,18 @@ function Author() {
       <h2>✍️ Yazar Sayfası</h2>
       <p>Burada yazarlar hakkında bilgi edinebilirsiniz.</p>
 
-      {/* Yeni Yazar Ekleme Formu */}
-      <form onSubmit={editingAuthor ? updateAuthor : addAuthor} className="author-form">
+      {/* Yazar Ekleme veya Güncelleme Formu */}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault(); // Sayfa yenilenmesini engelle
+          if (editingAuthor) {
+            updateAuthor(); // Yazar güncelleme
+          } else {
+            addAuthor(); // Yeni yazar ekleme
+          }
+        }}
+        className="author-form"
+      >
         <input
           type="text"
           placeholder="Yazar adı"
@@ -123,10 +114,7 @@ function Author() {
           value={editingAuthor ? editingAuthor.birthDate : newAuthor.birthDate}
           onChange={(e) =>
             editingAuthor
-              ? setEditingAuthor({
-                  ...editingAuthor,
-                  birthDate: e.target.value,
-                })
+              ? setEditingAuthor({ ...editingAuthor, birthDate: e.target.value })
               : setNewAuthor({ ...newAuthor, birthDate: e.target.value })
           }
           className="author-input"
@@ -141,7 +129,9 @@ function Author() {
           }
           className="author-input"
         />
-        <button type="submit" className="author-button">{editingAuthor ? "Güncelle" : "Ekle"}</button>
+        <button type="submit" className="author-button">
+          {editingAuthor ? "Güncelle" : "Ekle"}
+        </button>
       </form>
 
       {/* Bildirim Mesajı */}
@@ -154,29 +144,28 @@ function Author() {
           <p>Henüz yazar eklenmedi.</p>
         ) : (
           <ul className="author-list">
-          {authors.map((author) => (
-            <li key={author.id} className="author-item">
-              <div>
-                <strong>{author.name}</strong> - {author.country} - {author.birthDate}
-              </div>
-              <div className="author-buttons">
-                <button
-                  onClick={() => deleteAuthor(author.id)}
-                  className="author-delete-btn"
-                >
-                  Sil
-                </button>
-                <button
-                  onClick={() => setEditingAuthor(author)}
-                  className="author-edit-btn"
-                >
-                  Güncelle
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
-        
+            {authors.map((author) => (
+              <li key={author.id} className="author-item">
+                <div>
+                  <strong>{author.name}</strong> - {author.country} - {author.birthDate}
+                </div>
+                <div className="author-buttons">
+                  <button
+                    onClick={() => deleteAuthor(author.id)}
+                    className="author-delete-btn"
+                  >
+                    Sil
+                  </button>
+                  <button
+                    onClick={() => setEditingAuthor(author)}
+                    className="author-edit-btn"
+                  >
+                    Güncelle
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
         )}
       </div>
     </div>
