@@ -4,14 +4,18 @@ import "../style/Author.css";
 
 function Author() {
   const [authors, setAuthors] = useState([]);
-  const [newAuthor, setNewAuthor] = useState({ name: "", country: "", birthDate: "" });
+  const [newAuthor, setNewAuthor] = useState({
+    name: "",
+    country: "",
+    birthDate: "",
+  });
   const [editingAuthor, setEditingAuthor] = useState(null);
   const [message, setMessage] = useState("");
 
   // Yazarları çekme
   useEffect(() => {
     axios
-      .get("https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/authors")
+      .get("https://payable-kissee-elif-ce7b7688.koyeb.app/api/v1/authors")
       .then((response) => setAuthors(response.data))
       .catch((error) => console.error(error));
   }, []);
@@ -24,7 +28,10 @@ function Author() {
     }
 
     axios
-      .post("https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/authors", newAuthor)
+      .post(
+        "https://payable-kissee-elif-ce7b7688.koyeb.app/api/v1/authors",
+        newAuthor
+      )
       .then((response) => {
         if (response.status === 201) {
           setMessage("Yazar başarıyla eklendi!");
@@ -39,14 +46,19 @@ function Author() {
 
   // Yazar güncelleme
   const updateAuthor = () => {
-    if (!editingAuthor || !editingAuthor.name || !editingAuthor.country || !editingAuthor.birthDate) {
+    if (
+      !editingAuthor ||
+      !editingAuthor.name ||
+      !editingAuthor.country ||
+      !editingAuthor.birthDate
+    ) {
       setMessage("Lütfen tüm alanları doldurun.");
       return;
     }
 
     axios
       .put(
-        `https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/authors/${editingAuthor.id}`,
+        `https://payable-kissee-elif-ce7b7688.koyeb.app/api/v1/authors/${editingAuthor.id}`,
         editingAuthor
       )
       .then((response) => {
@@ -68,7 +80,9 @@ function Author() {
   // Yazar silme
   const deleteAuthor = (id) => {
     axios
-      .delete(`https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/authors/${id}`)
+      .delete(
+        `https://payable-kissee-elif-ce7b7688.koyeb.app/api/v1/authors/${id}`
+      )
       .then((response) => {
         if (response.status === 200) {
           setMessage("Yazar başarıyla silindi!");
@@ -114,7 +128,10 @@ function Author() {
           value={editingAuthor ? editingAuthor.birthDate : newAuthor.birthDate}
           onChange={(e) =>
             editingAuthor
-              ? setEditingAuthor({ ...editingAuthor, birthDate: e.target.value })
+              ? setEditingAuthor({
+                  ...editingAuthor,
+                  birthDate: e.target.value,
+                })
               : setNewAuthor({ ...newAuthor, birthDate: e.target.value })
           }
           className="author-input"
@@ -147,7 +164,8 @@ function Author() {
             {authors.map((author) => (
               <li key={author.id} className="author-item">
                 <div>
-                  <strong>{author.name}</strong> - {author.country} - {author.birthDate}
+                  <strong>{author.name}</strong> - {author.country} -{" "}
+                  {author.birthDate}
                 </div>
                 <div className="author-buttons">
                   <button

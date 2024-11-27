@@ -19,7 +19,7 @@ const Borrow = () => {
     const fetchBorrows = async () => {
       try {
         const response = await axios.get(
-          "https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/borrows"
+          "https://payable-kissee-elif-ce7b7688.koyeb.app/api/v1/borrows"
         );
         console.log(response.data);
         setBorrows(response.data);
@@ -56,7 +56,7 @@ const Borrow = () => {
       if (selectedBorrowId) {
         // Güncelleme işlemi
         const response = await axios.put(
-          `https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/borrows/${selectedBorrowId}`,
+          `https://payable-kissee-elif-ce7b7688.koyeb.app/api/v1/borrows/${selectedBorrowId}`,
           borrowData
         );
         if (response.status === 200) {
@@ -72,7 +72,7 @@ const Borrow = () => {
       } else {
         // Yeni kayıt işlemi
         const response = await axios.post(
-          "https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/borrows",
+          "https://payable-kissee-elif-ce7b7688.koyeb.app/api/v1/borrows",
           borrowData
         );
         if (response.status === 201) {
@@ -110,7 +110,7 @@ const Borrow = () => {
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(
-        `https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/borrows/${id}`
+        `https://payable-kissee-elif-ce7b7688.koyeb.app/api/v1/borrows/${id}`
       );
       if (response.status === 200) {
         setBorrows((prev) => prev.filter((borrow) => borrow.id !== id));

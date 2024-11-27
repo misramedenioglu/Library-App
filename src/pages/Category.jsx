@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "../style/Category.css";
 
-
 function Category() {
   // Kategoriler listesi
   const [categories, setCategories] = useState([]);
@@ -29,7 +28,7 @@ function Category() {
   // Kategorileri çekme
   useEffect(() => {
     axios
-      .get("https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/categories")
+      .get("https://payable-kissee-elif-ce7b7688.koyeb.app/api/v1/categories")
       .then((response) => setCategories(response.data))
       .catch((error) => console.error(error));
   }, []);
@@ -43,7 +42,10 @@ function Category() {
     }
 
     axios
-      .post("https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/categories", newCategory)
+      .post(
+        "https://payable-kissee-elif-ce7b7688.koyeb.app/api/v1/categories",
+        newCategory
+      )
       .then((response) => {
         if (response.status === 201) {
           setMessage("Kategori başarıyla eklendi!");
@@ -71,7 +73,7 @@ function Category() {
 
     axios
       .put(
-        `https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/categories/${editingCategory.id}`,
+        `https://payable-kissee-elif-ce7b7688.koyeb.app/api/v1/categories/${editingCategory.id}`,
         editingCategory
       )
       .then((response) => {
@@ -93,7 +95,9 @@ function Category() {
   // Kategori silme fonksiyonu
   const deleteCategory = (id) => {
     axios
-      .delete(`https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/categories/${id}`)
+      .delete(
+        `https://payable-kissee-elif-ce7b7688.koyeb.app/api/v1/categories/${id}`
+      )
       .then((response) => {
         if (response.status === 200) {
           setMessage("Kategori başarıyla silindi!");

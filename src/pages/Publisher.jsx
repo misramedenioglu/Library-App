@@ -27,7 +27,7 @@ function Publisher() {
 
   const fetchPublishers = () => {
     axios
-      .get("https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/publishers")
+      .get("https://payable-kissee-elif-ce7b7688.koyeb.app/api/v1/publishers")
       .then((response) => setPublishers(response.data))
       .catch((error) => console.error(error));
   };
@@ -46,7 +46,7 @@ function Publisher() {
 
     axios
       .post(
-        "https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/publishers",
+        "https://payable-kissee-elif-ce7b7688.koyeb.app/api/v1/publishers",
         newPublisher
       )
       .then((response) => {
@@ -76,7 +76,7 @@ function Publisher() {
 
     axios
       .put(
-        `https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/publishers/${editingPublisher.id}`,
+        `https://payable-kissee-elif-ce7b7688.koyeb.app/api/v1/publishers/${editingPublisher.id}`,
         editingPublisher
       )
       .then((response) => {
@@ -101,7 +101,7 @@ function Publisher() {
   const deletePublisher = (id) => {
     axios
       .delete(
-        `https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/publishers/${id}`
+        `https://payable-kissee-elif-ce7b7688.koyeb.app/api/v1/publishers/${id}`
       )
       .then((response) => {
         if (response.status === 200) {

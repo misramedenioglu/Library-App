@@ -6,25 +6,59 @@ function Book() {
   const [books, setBooks] = useState([]); // Kitaplar listesi
   const [newBook, setNewBook] = useState({
     name: "",
-    publicationYear: 0,
-    stock: 0,
-    author: { name: "", birthDate: "", country: "" },
-    publisher: { name: "", establishmentYear: 0, address: "" },
-    categories: [{ name: "", description: "" }],
+    publicationYear: "",
+    stock: "",
+    authorId: "",
+    publisherId: "",
+    categoryIds: [],
   }); // Yeni kitap bilgisi
   const [editingBook, setEditingBook] = useState(null); // Düzenlenmekte olan kitap
   const [message, setMessage] = useState(""); // Kullanıcı mesajı
 
+  const [authors, setAuthors] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [publishers, setPublishers] = useState([]);
+
   // Kitapları API'den çek
   useEffect(() => {
     axios
-      .get("https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/books")
+      .get("https://payable-kissee-elif-ce7b7688.koyeb.app/api/v1/books")
       .then((response) => {
         setBooks(response.data);
       })
       .catch((error) => {
         console.error("Kitapları çekerken hata oluştu: ", error);
         setMessage("Kitaplar yüklenirken bir hata oluştu.");
+      });
+
+    axios
+      .get("https://payable-kissee-elif-ce7b7688.koyeb.app/api/v1/authors")
+      .then((response) => {
+        setAuthors(response.data);
+      })
+      .catch((error) => {
+        console.error("yazarları çekerken hata oluştu: ", error);
+        setMessage("yazarlar yüklenirken bir hata oluştu.");
+      });
+
+    axios
+      .get("https://payable-kissee-elif-ce7b7688.koyeb.app/api/v1/categories")
+      .then((response) => {
+        setCategories(response.data);
+      })
+      .catch((error) => {
+        console.error("yazarları çekerken hata oluştu: ", error);
+        setMessage("yazarlar yüklenirken bir hata oluştu.");
+      });
+
+    axios
+      .get("https://payable-kissee-elif-ce7b7688.koyeb.app/api/v1/publishers")
+      .then((response) => {
+        setPublishers(response.data);
+      })
+      .catch((error) => {
+        console.error("yazarları çekerken hata oluştu: ", error);
+        setMessage("yazarlar yüklenirken bir hata oluştu.");
       });
   }, []);
 
@@ -37,28 +71,47 @@ function Book() {
       !newBook.name ||
       !newBook.publicationYear ||
       !newBook.stock ||
-      !newBook.author.name ||
-      !newBook.publisher.name ||
-      !newBook.categories[0].name ||
-      !newBook.categories[0].description
+      !newBook.authorId ||
+      !newBook.publisherId ||
+      !newBook.categoryIds.length
     ) {
       setMessage("Lütfen tüm alanları doldurun.");
       return;
     }
 
+    const bookData = {
+      ...newBook,
+      author: { id: newBook.authorId }, // Add the author ID to the book data
+      publisher: { id: newBook.publisherId }, // Add the publisher ID to the book data
+      categories: newBook.categoryIds.map((id) => ({ id })), // Mapping categories
+    };
+
     axios
-      .post("https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/books", newBook)
+      .post(
+        "https://payable-kissee-elif-ce7b7688.koyeb.app/api/v1/books",
+        bookData
+      )
       .then((response) => {
         if (response.status === 201) {
           setMessage("Kitap başarıyla eklendi!");
-          setBooks((prevBooks) => [...prevBooks, response.data]);
+
+          axios
+            .get("https://payable-kissee-elif-ce7b7688.koyeb.app/api/v1/books")
+            .then((response) => {
+              setBooks(response.data);
+            })
+            .catch((error) => {
+              console.error("Kitapları çekerken hata oluştu: ", error);
+              setMessage("Kitaplar yüklenirken bir hata oluştu.");
+            });
+
           setNewBook({
             name: "",
-            publicationYear: 0,
-            stock: 0,
-            author: { name: "", birthDate: "", country: "" },
-            publisher: { name: "", establishmentYear: 0, address: "" },
-            categories: [{ name: "", description: "" }],
+            publicationYear: "",
+            stock: "",
+            authorId: "",
+            publisherId: "",
+            categoryIds: [],
           });
         } else {
           setMessage("Kitap eklenemedi!");
@@ -70,35 +123,68 @@ function Book() {
       });
   };
 
+  const handleEdit = (book) => {
+    setEditingBook(book); // Set the book to be edited
+    setNewBook({
+      name: book.name,
+      publicationYear: book.publicationYear,
+      stock: book.stock,
+      authorId: book.author.id,
+      publisherId: book.publisher.id,
+      categoryIds: book.categories.map((category) => category.id),
+    }); // Pre-fill the form with the book data
+  };
+
   // Kitap güncelleme
   const updateBook = (e) => {
     e.preventDefault();
 
     if (
-      !editingBook ||
-      !editingBook.name ||
-      !editingBook.publicationYear ||
-      !editingBook.stock ||
-      !editingBook.author.name ||
-      !editingBook.publisher.name ||
-      !editingBook.categories[0].name ||
-      !editingBook.categories[0].description
+      // Check if all necessary fields are filled
+      !newBook.name ||
+      !newBook.publicationYear ||
+      !newBook.stock ||
+      !newBook.authorId ||
+      !newBook.publisherId ||
+      !newBook.categoryIds.length
     ) {
       setMessage("Lütfen tüm alanları doldurun.");
       return;
     }
 
+    const updatedBookData = {
+      ...editingBook, // Retain the existing book data
+      name: newBook.name,
+      publicationYear: newBook.publicationYear,
+      stock: newBook.stock,
+      author: { id: newBook.authorId }, // Update the author ID
+      publisher: { id: newBook.publisherId }, // Update the publisher ID
+      categories: newBook.categoryIds.map((id) => ({ id })), // Update the categories
+    };
+
     axios
-      .put(`https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/books/${editingBook.id}`, editingBook)
+      .put(
+        `https://payable-kissee-elif-ce7b7688.koyeb.app/api/v1/books/${editingBook.id}`,
+        updatedBookData
+      )
       .then((response) => {
         if (response.status === 200) {
+          console.log(response.data);
           setMessage("Kitap başarıyla güncellendi!");
-          setBooks((prevBooks) =>
-            prevBooks.map((book) =>
-              book.id === editingBook.id ? editingBook : book
+          setBooks(
+            books.map((book) =>
+              book.id === response.data.id ? response.data : book
             )
           );
           setEditingBook(null);
+          setNewBook({
+            name: "",
+            publicationYear: "",
+            stock: "",
+            authorId: "",
+            publisherId: "",
+            categoryIds: [],
+          });
         } else {
           setMessage("Kitap güncellenemedi!");
         }
@@ -112,7 +198,9 @@ function Book() {
   // Kitap silme
   const deleteBook = (id) => {
     axios
-      .delete(`https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/books/${id}`)
+      .delete(
+        `https://payable-kissee-elif-ce7b7688.koyeb.app/api/v1/books/${id}`
+      )
       .then((response) => {
         if (response.status === 200) {
           setMessage("Kitap başarıyla silindi!");
@@ -133,110 +221,100 @@ function Book() {
       <p>Burada kitaplar hakkında bilgi edinebilirsiniz.</p>
 
       {/* Kitap Ekleme ve Düzenleme Formu */}
-      <form onSubmit={editingBook ? updateBook : addBook} className="form-container">
+      <form
+        onSubmit={editingBook ? updateBook : addBook}
+        className="form-container"
+      >
         <input
           type="text"
           placeholder="Kitap adı"
-          value={editingBook ? editingBook.name : newBook.name}
-          onChange={(e) =>
-            editingBook
-              ? setEditingBook({ ...editingBook, name: e.target.value })
-              : setNewBook({ ...newBook, name: e.target.value })
-          }
+          value={newBook.name}
+          onChange={(e) => setNewBook({ ...newBook, name: e.target.value })}
         />
         <input
           type="number"
           placeholder="Yayın yılı"
-          value={editingBook ? editingBook.publicationYear : newBook.publicationYear}
+          value={newBook.publicationYear}
           onChange={(e) =>
-            editingBook
-              ? setEditingBook({
-                  ...editingBook,
-                  publicationYear: Number(e.target.value),
-                })
-              : setNewBook({
-                  ...newBook,
-                  publicationYear: Number(e.target.value),
-                })
+            setNewBook({ ...newBook, publicationYear: e.target.value })
           }
         />
         <input
           type="number"
           placeholder="Stok miktarı"
-          value={editingBook ? editingBook.stock : newBook.stock}
-          onChange={(e) =>
-            editingBook
-              ? setEditingBook({
-                  ...editingBook,
-                  stock: Number(e.target.value),
-                })
-              : setNewBook({
-                  ...newBook,
-                  stock: Number(e.target.value),
-                })
-          }
+          value={newBook.stock}
+          onChange={(e) => setNewBook({ ...newBook, stock: e.target.value })}
         />
-        <input
-          type="text"
-          placeholder="Yazar adı"
-          value={editingBook ? editingBook.author.name : newBook.author.name}
-          onChange={(e) =>
-            editingBook
-              ? setEditingBook({
-                  ...editingBook,
-                  author: { ...editingBook.author, name: e.target.value },
-                })
-              : setNewBook({
-                  ...newBook,
-                  author: { ...newBook.author, name: e.target.value },
-                })
-          }
-        />
-        <input
-          type="text"
-          placeholder="Kategori adı"
-          value={editingBook ? editingBook.categories[0].name : newBook.categories[0].name}
-          onChange={(e) =>
-            editingBook
-              ? setEditingBook({
-                  ...editingBook,
-                  categories: [
-                    { ...editingBook.categories[0], name: e.target.value },
-                  ],
-                })
-              : setNewBook({
-                  ...newBook,
-                  categories: [
-                    { ...newBook.categories[0], name: e.target.value },
-                  ],
-                })
-          }
-        />
-        <textarea
-          placeholder="Kategori açıklaması"
-          value={editingBook ? editingBook.categories[0].description : newBook.categories[0].description}
-          onChange={(e) =>
-            editingBook
-              ? setEditingBook({
-                  ...editingBook,
-                  categories: [
-                    { ...editingBook.categories[0], description: e.target.value },
-                  ],
-                })
-              : setNewBook({
-                  ...newBook,
-                  categories: [
-                    { ...newBook.categories[0], description: e.target.value },
-                  ],
-                })
-          }
-        />
+        <div>
+          <label>Author:</label>
+          <select
+            value={newBook.authorId}
+            onChange={(e) =>
+              setNewBook({ ...newBook, authorId: e.target.value })
+            }
+            required
+          >
+            <option value="">Select Author</option>
+            {authors.map((author) => (
+              <option key={author.id} value={author.id}>
+                {author.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label>Categories:</label>
+          <select
+            multiple
+            value={newBook.categoryIds}
+            onChange={(e) =>
+              setNewBook({
+                ...newBook,
+                categoryIds: Array.from(
+                  e.target.selectedOptions,
+                  (option) => option.value
+                ),
+              })
+            }
+            required
+          >
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label>Publisher:</label>
+          <select
+            value={newBook.publisherId}
+            onChange={(e) =>
+              setNewBook({ ...newBook, publisherId: e.target.value })
+            }
+            required
+          >
+            <option value="">Select Publisher</option>
+            {publishers.map((publisher) => (
+              <option key={publisher.id} value={publisher.id}>
+                {publisher.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <button type="submit">{editingBook ? "Güncelle" : "Ekle"}</button>
       </form>
 
       {/* Bildirim Mesajı (Form ve Kitap Listesi Arasında) */}
       {message && (
-        <div className={`message ${message.includes("başarıyla") ? "success" : "error"}`}>
+        <div
+          className={`message ${
+            message.includes("başarıyla") ? "success" : "error"
+          }`}
+        >
           {message}
         </div>
       )}
@@ -246,10 +324,13 @@ function Book() {
         {books.map((book) => (
           <div key={book.id} className="book-card">
             <h3>{book.name}</h3>
-            <p>Yazar: {book.author.name}</p>
+            <p>Yazar: {book.author?.name}</p>
+            <p>Yayıncı: {book.publisher?.name}</p>
             <p>Yayın Yılı: {book.publicationYear}</p>
             <p>Stok: {book.stock}</p>
-            <button onClick={() => setEditingBook(book)}>Düzenle</button>
+            <strong>Categories:</strong>{" "}
+            {book.categories?.map((category) => category.name).join(", ")}
+            <button onClick={() => handleEdit(book)}>Düzenle</button>
             <button onClick={() => deleteBook(book.id)}>Sil</button>
           </div>
         ))}
