@@ -33,23 +33,14 @@ function Book() {
     e.preventDefault();
 
     // Boş alan kontrolü
-    const {
-      name,
-      publicationYear,
-      stock,
-      author,
-      publisher,
-      categories,
-    } = newBook;
-
     if (
-      !name ||
-      !publicationYear ||
-      !stock ||
-      !author.name ||
-      !publisher.name ||
-      !categories[0].name ||
-      !categories[0].description
+      !newBook.name ||
+      !newBook.publicationYear ||
+      !newBook.stock ||
+      !newBook.author.name ||
+      !newBook.publisher.name ||
+      !newBook.categories[0].name ||
+      !newBook.categories[0].description
     ) {
       setMessage("Lütfen tüm alanları doldurun.");
       return;
@@ -83,34 +74,22 @@ function Book() {
   const updateBook = (e) => {
     e.preventDefault();
 
-    // Boş alan kontrolü
-    const {
-      name,
-      publicationYear,
-      stock,
-      author,
-      publisher,
-      categories,
-    } = editingBook || {};
-
     if (
-      !name ||
-      !publicationYear ||
-      !stock ||
-      !author.name ||
-      !publisher.name ||
-      !categories[0].name ||
-      !categories[0].description
+      !editingBook ||
+      !editingBook.name ||
+      !editingBook.publicationYear ||
+      !editingBook.stock ||
+      !editingBook.author.name ||
+      !editingBook.publisher.name ||
+      !editingBook.categories[0].name ||
+      !editingBook.categories[0].description
     ) {
       setMessage("Lütfen tüm alanları doldurun.");
       return;
     }
 
     axios
-      .put(
-        `https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/books/${editingBook.id}`,
-        editingBook
-      )
+      .put(`https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/books/${editingBook.id}`, editingBook)
       .then((response) => {
         if (response.status === 200) {
           setMessage("Kitap başarıyla güncellendi!");
@@ -133,9 +112,7 @@ function Book() {
   // Kitap silme
   const deleteBook = (id) => {
     axios
-      .delete(
-        `https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/books/${id}`
-      )
+      .delete(`https://awkward-abby-egitim-2c6ebaa9.koyeb.app/api/v1/books/${id}`)
       .then((response) => {
         if (response.status === 200) {
           setMessage("Kitap başarıyla silindi!");
@@ -257,14 +234,21 @@ function Book() {
         <button type="submit">{editingBook ? "Güncelle" : "Ekle"}</button>
       </form>
 
-      {/* Kullanıcı Mesajı */}
-      {message && <div className="message">{message}</div>}
+      {/* Bildirim Mesajı (Form ve Kitap Listesi Arasında) */}
+      {message && (
+        <div className={`message ${message.includes("başarıyla") ? "success" : "error"}`}>
+          {message}
+        </div>
+      )}
 
-      {/* Kitaplar Listesi */}
+      {/* Kitap Listesi */}
       <div className="book-list">
         {books.map((book) => (
-          <div key={book.id} className="book-item">
+          <div key={book.id} className="book-card">
             <h3>{book.name}</h3>
+            <p>Yazar: {book.author.name}</p>
+            <p>Yayın Yılı: {book.publicationYear}</p>
+            <p>Stok: {book.stock}</p>
             <button onClick={() => setEditingBook(book)}>Düzenle</button>
             <button onClick={() => deleteBook(book.id)}>Sil</button>
           </div>
